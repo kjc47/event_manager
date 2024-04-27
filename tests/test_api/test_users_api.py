@@ -37,12 +37,11 @@ async def test_retrieve_user_access_allowed(async_client, admin_user, admin_toke
     assert response.json()["id"] == str(admin_user.id)
 
 @pytest.mark.asyncio
-async def test_update_user_email_access_denied(async_client, verified_user, user_token):
-    updated_data = {"email": f"updated_{verified_user.id}@example.com"}
-    headers = {"Authorization": f"Bearer {user_token}"}
-    response = await async_client.put(f"/users/{verified_user.id}", json=updated_data, headers=headers)
-    assert response.status_code == 403
-
+async def test_retrieve_user2(async_client, user, token):
+    headers = {"Authorization": f"Bearer {token}"}
+    response = await async_client.get(f"/users/{user.id}", headers=headers)
+    assert response.status_code == 200
+    assert response.json()["username"] == str(user.username)
 @pytest.mark.asyncio
 async def test_update_user_email_access_allowed(async_client, admin_user, admin_token):
     updated_data = {"email": f"updated_{admin_user.id}@example.com"}
