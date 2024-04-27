@@ -30,11 +30,38 @@ async def test_retrieve_user_access_denied(async_client, verified_user, user_tok
     assert response.status_code == 403
 
 @pytest.mark.asyncio
-async def test_retrieve_user_access_allowed(async_client, admin_user, admin_token):
-    headers = {"Authorization": f"Bearer {admin_token}"}
-    response = await async_client.get(f"/users/{admin_user.id}", headers=headers)
-    assert response.status_code == 200
-    assert response.json()["id"] == str(admin_user.id)
+async def test_create_user2(async_client):
+    form_data = {
+        "username": "admin",
+        "password": "secret",
+    }
+    # Login and get the access token
+    token_response = await async_client.post("/token", data=form_data)
+    access_token = token_response.json()["access_token"]
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    # Define user data for the test
+    user_data1 = {
+        "username": "testuser",
+        "email": "test@example.com",
+        "password": "sS#fdasrongPassword123!",
+    }
+
+    # Send a POST request to create a user
+    response = await async_client.post("/users/", json=user_data1, headers=headers)
+
+    # Define user data for the test
+    user_data2 = {
+        "username": "testuser3",
+        "email": "test@example.com",
+        "password": "sS#fdasrongPassword123!",
+    }
+
+    # Send a POST request to create a user
+    response2 = await async_client.post("/users/", json=user_data2, headers=headers)
+
+    # Asserts
+    assert response2.status_code == 400
 
 @pytest.mark.asyncio
 async def test_retrieve_user2(async_client, user, token):
