@@ -65,6 +65,11 @@ async def get_user(user_id: UUID, request: Request, db: AsyncSession = Depends(g
         linkedin_profile_url=user.linkedin_profile_url,
         role=user.role,
         email=user.email,
+        full_name= user.full_name,
+       
+       
+        bio=user.bio,
+        profile_picture_url = user.profile_picture_url,
         last_login_at=user.last_login_at,
         created_at=user.created_at,
         updated_at=user.updated_at,
